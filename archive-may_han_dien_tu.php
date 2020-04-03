@@ -6,31 +6,31 @@ get_header('tintuc');
   <div class="container">
     <div class="row">
       <div class="col-sm-4 col-md-3">         
-        <div class="list-group">
+
+        <div class="list-group ">
           <h3 class="list-group-item bg-color-1 text-white">
-            THƯƠNG HIỆU
-          </h3>
-          <?php
-        $args_terms = array( 
-          'taxonomy' => 'thuong_hieu_may_han'    
-        ); 
-        $terms = get_terms( $args_terms ); if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
-          foreach ( $terms as $term ) { ?>               
-          <a href="<?php echo $term->slug; ?>" class="list-group-item list-group-item-action"><?php echo $term->name; ?> </a>
-          <?php }} ?>
-        </div>
-        <div class="list-group mt-4">
-          <h3 class="list-group-item bg-color-1 text-white">
-            LOẠI MÁY
+            CHỌN LOẠI MÁY
           </h3>
           <?php
           $args_terms = array( 
             'taxonomy' => 'loai_may_han'    
           ); 
           $terms = get_terms( $args_terms ); if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
-            foreach ( $terms as $term ) { ?>               
-            <a href="<?php echo $term->slug; ?>" class="list-group-item list-group-item-action"><?php echo $term->name; ?> </a>
+            foreach ( $terms as $term ) {  ?>
+            <a href="<?php echo get_term_link($term->term_id); ?>" class="list-group-item list-group-item-action font-weight-bold"><?php echo $term->name; ?> </a>
             <?php }} ?>
+        </div>
+
+        <div class="list-group mt-4">
+          <h3 class="list-group-item bg-color-1 text-white">
+            DANH SÁCH SẢN PHẨM
+          </h3>                        
+          <a href="#" class="list-group-item list-group-item-action font-weight-bold">Máy Hàn</a>
+          <a href="#" class="list-group-item list-group-item-action font-weight-bold">Máy Cắt</a>
+          <a href="#" class="list-group-item list-group-item-action font-weight-bold">Máy Mài</a>
+          <a href="#" class="list-group-item list-group-item-action font-weight-bold">Máy Rửa Xe</a>
+          <a href="#" class="list-group-item list-group-item-action font-weight-bold">Dụng Cụ Cầm Tay</a>
+          
         </div>
    
       </div>

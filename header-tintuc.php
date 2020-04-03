@@ -62,9 +62,12 @@
   <link rel="stylesheet" href="<?php bloginfo('stylesheet_directory')?>/css/style.css">
   <!--responsive css-->
   <link rel="stylesheet" href="<?php bloginfo('stylesheet_directory')?>/css/responsive.css">
+  <?php wp_head() ?>
+
 </head>
 
 <body class="bg-light">
+<div class="loading"></div>
   <header class="header ">
     <!--start navbar-->
     <nav id="nav" class="navbar navbar-expand-lg custom-nav">
@@ -86,7 +89,7 @@
       ?>        
          <!-- End Menu -->
 				
-				<form action="#" method="get" class="subscribe-form subscribe-form-footer ml-4">
+				<form action="https://mayhangiarehcm.com/" method="get" class="subscribe-form subscribe-form-footer ml-4">
           <div class="d-flex align-items-center">
             <input type="search" class="form-control input" id="email-footer" name="s" value=""
               placeholder="Hôm nay bạn tìm gì?">

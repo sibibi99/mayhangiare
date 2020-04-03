@@ -131,6 +131,7 @@
 <script src="<?php bloginfo('stylesheet_directory')?>/js/owl.carousel.min.js"></script>
 <!--custom js-->
 <script src="<?php bloginfo('stylesheet_directory')?>/js/scripts.js"></script>
+
 <!-- CUSTOM SUB MENU -->
 
 

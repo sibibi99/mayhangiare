@@ -343,7 +343,7 @@ function hide_menu() {
 
 
 }
-add_action( 'admin_menu', 'hide_menu' );
+// add_action( 'admin_menu', 'hide_menu' );
 
 // Đổi Logo Admin
 	function Si_admin() { 
@@ -367,5 +367,98 @@ add_action( 'admin_menu', 'hide_menu' );
 		 <?php 
 		}
 	add_action( 'login_enqueue_scripts', 'Si_admin' );
+
+	// AJAX Xu ly Sort
+	function set_the_terms_in_order ( $terms, $id, $taxonomy ) {
+		$terms = wp_cache_get( $id, "{$taxonomy}_relationships_sorted" );
+		if ( false === $terms ) {
+			$terms = wp_get_object_terms( $id, $taxonomy, array( 'orderby' => 'term_order' ) );
+			wp_cache_add($id, $terms, $taxonomy . '_relationships_sorted');
+		}
+		return $terms;
+	}
+	add_filter( 'get_the_terms', 'set_the_terms_in_order' , 10, 4 );
+	
+	function do_the_terms_in_order () {
+			global $wp_taxonomies;  //fixed missing semicolon
+			// the following relates to tags, but you can add more lines like this for any taxonomy
+			$wp_taxonomies['post_tag']->sort = true;
+			$wp_taxonomies['post_tag']->args = array( 'orderby' => 'term_order' );    
+	}
+	add_action( 'init', 'do_the_terms_in_order');
+	
+	
+	//Add script to site
+	
+	function add_script_to_site(){
+		global $wp_query;
+		wp_register_script('ajax-brands-script',get_template_directory_uri().'/js/ajax-brands-script.js',array('jquery'));
+		wp_enqueue_script('ajax-brands-script');
+		wp_localize_script('ajax-brands-script','ajax_brands_object',[
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+			'query_object' => get_queried_object()
+		]);
+	}
+	add_action('wp_enqueue_scripts','add_script_to_site');
+	
+	add_action('wp_ajax_brands', 'render_item_by_brands');
+	add_action('wp_ajax_nopriv_brands', 'render_item_by_brands');
+	function render_item_by_brands(){
+		$terms = $_POST['id_brands'];
+		$query_object = (object)$_POST['query_object'];
+	
+		$all_terms_thuonghieu = get_terms('thuong_hieu_may_han');
+		$terms_thuonghieu = array();
+		foreach ($all_terms_thuonghieu as $term) {
+				$terms_thuonghieu[] = $term->term_id;
+		}
+	
+		$brand_arr = [
+				'taxonomy' => 'thuong_hieu_may_han',                //(string) - Tên của taxonomy
+				'field' => 'id',                    
+				'terms' => count($terms) != 0 ? $terms : $terms_thuonghieu,
+				'include_children' => true,           
+				'operator' => 'IN'
+		];
+	
+		$sanpham = new WP_Query(array(
+				'post_type' => 'may_han_dien_tu',
+				'posts_per_page'=> 12,
+				'tax_query' => array(
+					'relation' => 'AND',
+						array(
+						'taxonomy' => 'loai_may_han',             
+						'field' => 'id',                    
+						'terms' => $query_object->term_id,
+						'include_children' => true,           
+						'operator' => 'IN'                      
+					),
+					$brand_arr
+				)
+			));
+	
+		ob_start();
+		echo "<div class='row'>";
+		if($sanpham->have_posts()){
+			while($sanpham->have_posts()) {
+								$sanpham->the_post();
+								$giaban = get_field('gia_ban');           
+								$giagoc = get_field('gia_goc');           
+								$baohanh = get_field('bao_hanh'); 
+								$giam = 100- $giaban / $giagoc * 100;  
+	
+								include( locate_template( 'archive-item.php', false, false ) ); 
+						} 
+						wp_reset_query();
+		}
+		echo "</div>";
+		$data = ob_get_contents();
+		ob_clean();
+		ob_end_flush();
+		die($data);
+	}
+	
+	
+	
 
 ?>

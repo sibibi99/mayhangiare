@@ -14,6 +14,8 @@ get_header('tintuc');
     $mo_ta_ngan = get_field('mo_ta_ngan'); 
     $trong_luong = get_field('trong_luong'); 
     $kich_thuoc = get_field('kich_thuoc'); 
+    $xuatsu = get_field_object('xuat_su'); 
+
     $giam = 100- $giaban / $giagoc * 100;
     
     $terms = get_the_terms(get_the_ID(),'thuong_hieu_may_han');
@@ -111,7 +113,7 @@ get_header('tintuc');
                 <th scope="row">
                   <h3>Xuất xứ Thương hiệu</h3>
                 </th>
-                <td>Trung Quốc</td>
+                <td><?php echo the_field('xuat_su')?></td>
               </tr>
               <tr>
                 <th scope="row">
